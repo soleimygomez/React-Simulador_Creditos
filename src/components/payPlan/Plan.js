@@ -9,14 +9,20 @@ export default class Plan extends Component {
   };
 
   cargarPlanes = () => {
-    var url = Global.urlPlanes;
-    var request = "/plan";
-    axios.get(url + request).then((res) => {
-      this.setState({
-        Planes: res.data,
-        status: true,
-      });
+    axios
+    .get("http://localhost:3001/plan/all")
+    .then((response) => {
+    console.log(response);
+     this.setState({...this.state,planes:response.data,status:true}); 
+     // this.setState({clientes:[response], ...this.state})
+    })
+    .catch((error) => {
+      console.log(error);
+      return error;
     });
+    console.log(this.state);
+   
+    
   };
 
   componentDidMount = () => {
@@ -45,10 +51,10 @@ export default class Plan extends Component {
                             return(
                                 <tr key={i}>
                                     <td>{plan.id}</td>
-                                    <td>{plan.monto}</td>
-                                    <td>{plan.interes}</td>
+                                    <td>${plan.monto}</td>
+                                    <td>{plan.interes}%</td>
                                     <td>{plan.forma_pago}</td>
-                                    <td>{plan.valorcuota}</td>
+                                    <td>${plan.valorcuota}</td>
                                     <td>{plan.cliente}</td>
                                 </tr>
                             );

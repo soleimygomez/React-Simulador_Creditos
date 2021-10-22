@@ -1,4 +1,4 @@
 var Global ={
-    urlSimular: "http://localhost:3000"
+    urlSimular: "http://localhost:3001"
 }
 export default Global;

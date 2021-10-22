@@ -1,5 +1,5 @@
-export  const calculo=(interes,monto,cuotas)=>{
+export  const calculo=(interes,monto,cuota)=>{
 
-    let resul= monto*(interes * (Math.pow((1 + interes), cuotas)) / (Math.pow((1 + interes), cuotas) - 1));
+    let resul= monto*(interes * (Math.pow((1 + interes), cuota)) / (Math.pow((1 + interes), cuota) - 1));
      return resul;
 }

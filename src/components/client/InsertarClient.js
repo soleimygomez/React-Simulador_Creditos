@@ -5,7 +5,7 @@ import { Redirect } from 'react-router';
 
 let cliente={
 }
-const initialState = {
+var initialstate= {
   //las variables
   status: false,
   cedula: "",
@@ -15,12 +15,11 @@ const initialState = {
   direccion: "",
   correo: "",
   
- 
 };
 export default class InsertarClient extends Component {
   constructor(props) {
     super(props);
-    this.state = initialState;
+    this.state = initialstate;
     this.nuevoClient = this.nuevoClient.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -35,7 +34,7 @@ export default class InsertarClient extends Component {
     });
   };
   nuevoClient = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
       cliente = {
       cedula: this.state.cedula,
@@ -46,13 +45,42 @@ export default class InsertarClient extends Component {
       correo: this.state.correo,
       
     };
+    console.log(this.state);
     
-    var url = Global.urlclientes + "/clientes";
-    axios.post(url, cliente).then((res) => {
-      this.setState({ status: true });
-    });
+    axios
+      .post("http://localhost:3001/client/register",cliente)
+      .then((response) => {
+        console.log(response.data);
+        alert(JSON.stringify(response.data));
+        
+  
+       // this.setState({clientes:[response], ...this.state})
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      });
+      this.setState(initialstate);
+  }
+    // componentDidMount(){
+    //   // console.log(this.state.clientes);
+    //   // console.log(clientesPeticion);
+    //   // axios
+    //   //   .post("http://localhost:3001/client/register")
+    //   //   .then((response) => {
+    //   //     console.log(response);
+    
+    //   //    // this.setState({clientes:[response], ...this.state})
+    //   //   })
+    //   //   .catch((error) => {
+    //   //     console.log(error);
+    //   //     return error;
+    //   //   });
+         
+    //     console.log(cliente);
+    // }
    
-  };
+  
   render() {
     if (this.state.status === true) {
      return <Redirect to="/src/App.js" />
@@ -62,7 +90,9 @@ export default class InsertarClient extends Component {
         <h1>Nuevo Cliente</h1>
         <form
         
-          onSubmit={this.nuevoClient}
+          onSubmit={
+            this.nuevoClient
+          }
           style={{ width: "50%", margin: "auto" }}
         >
           <label>Cedula:</label>
@@ -115,8 +145,8 @@ export default class InsertarClient extends Component {
             value={this.state.correo}
               onChange={this.handleChange}
           />
-          
-           <center><button className="btn btn-success">Registrarme Como Cliente</button> </center>
+          <br />
+           <center><button className="btn btn-success" type="submit">Registrarme Como Cliente</button> </center>
            <br />
         </form>
       </div>

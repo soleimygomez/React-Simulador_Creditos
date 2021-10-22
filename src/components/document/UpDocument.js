@@ -1,28 +1,33 @@
 import React from "react";
 import axios from "axios";
+import { addPlan } from "../../util/http/peticiones";
 
-const UpDocument = ({ selectedFile }) => {
+
+const UpDocument = ({ selectedFile,idCliente,plan }) => {
   const onFileUpload = () => {
     const formData = new FormData();
-    formData.append("image", selectedFile);
+    formData.append("documento", selectedFile);
     console.log(selectedFile);
-
-    axios.post("http://localhost:8080/subir", formData) // py, java, node
+    axios.put(`http://localhost:3001/client/updateDocument/${idCliente}`, formData) // py, java, node
       .then((resp) => {
-       let route = "http://localhost:3000/" + resp.data.url;
-       let newWindow = window.open(route, "blank");
-       
+       alert(JSON.stringify(resp.data));
       })
       .catch((error) => console.log(error));
   };
+
+  const subirPlan=()=>{
+      onFileUpload();
+      addPlan(plan);
+  }
 
   return (
     <>
       {" "}
       {selectedFile ? (
-        <button onClick={onFileUpload}> Subir </button>
+        <button onClick={subirPlan}> Subir </button>
+        
       ) : (
-        <button onClick={onFileUpload} style={{ background: "gray" }} disabled>
+        <button onClick={subirPlan} style={{ background: "gray" }} disabled>
           Subir
         </button>
       )}{" "}

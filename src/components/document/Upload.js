@@ -21,8 +21,10 @@ const Upload = ({ setSelectedFile }) => {
         <input
           style={{ display: "none" }}
           type="file"
+          name="documento"
           ref={hiddenFileInput}
           onChange={handleChange}
+          enctype="multipart/form-data"
         />
       </div>
     </>

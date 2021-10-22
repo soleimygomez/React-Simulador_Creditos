@@ -4,21 +4,12 @@ import { calculo } from "../../util/calculo";
 import { addPlan } from "../../util/http/peticiones";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Main from "../document/Main";
 
+var array;
+ 
 let plan = {};
-
-let clientesPeticion = [];
-
-// axios
-//   .get("http://localhost:3001/client/all")
-//   .then((response) => {
-//     console.log(response);
-//     clientesPeticion.push(response);
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//     return error;
-//   });
+ 
 
 
 export default class InsertarPlan extends Component {
@@ -32,11 +23,12 @@ export default class InsertarPlan extends Component {
       cuota: "",
       forma_pago: "",
       // valorcuota: "",
+      cliente:"",
       listSelected: "",
       clientes: [],
-    };;
-    this.nuevoPlan = this.nuevoPlan.bind(this, true);
-    this.handleChange = this.handleChange.bind(this, false);
+    };
+    this.nuevoPlan = this.nuevoPlan.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   
@@ -46,15 +38,17 @@ export default class InsertarPlan extends Component {
     axios
       .get("http://localhost:3001/client/all")
       .then((response) => {
-        console.log(response);
-        this.state.clientes.push(response.data);
+      console.log(response);
+       this.setState({...this.state,clientes:response.data}); 
        // this.setState({clientes:[response], ...this.state})
       })
       .catch((error) => {
         console.log(error);
         return error;
       });
-      console.log(this.state);
+     // console.log(this.state);
+      console.log(this.state.forma_pago)
+     // console.log(array);
   }
 
   handleChange = (event) => {
@@ -62,6 +56,7 @@ export default class InsertarPlan extends Component {
     const target = event.target;
     const value = target.value;
     const name = target.name;
+     console.log("Seleccion: " + value);
 
     this.setState({
       ...this.state,
@@ -83,33 +78,33 @@ export default class InsertarPlan extends Component {
       id: this.state.id,
       monto: this.state.monto,
       interes: this.state.interes,
-      cuotas: this.state.cuota,
+      cuota: this.state.cuota,
       forma_pago: this.state.forma_pago,
       valorcuota: calculo(
         this.state.interes,
         this.state.monto,
-        this.state.cuotas
+        this.state.cuota
       ),
-      cliente: this.state.cliente,
+      cliente: this.state.listSelected
+      
     };
-    this.setState({
+    this.setState({...this.state,
       status: true,
     });
+      
   };
 
   render() {
-    if (this.state.status === true) {
-      return <Redirect to="/" />;
-    }
+     
     return (
       <div>
         <center>
           <h1>Calculadora de Creditos</h1>
         </center>
         <form
-          onSubmit={() => {
-            this.nuevoPlan();
-          }}
+          onSubmit={
+            this.nuevoPlan
+          }
           style={{ width: "50%", margin: "auto" }}
         >
           <div className="form-group">
@@ -136,7 +131,7 @@ export default class InsertarPlan extends Component {
             <label>Cuotas:</label>
             <input
               type="text"
-              name="cuotas"
+              name="cuota"
               className="form-control"
               value={this.state.cuotas}
               onChange={this.handleChange}
@@ -167,17 +162,18 @@ export default class InsertarPlan extends Component {
                onChange={this.handleChangeSelect}
               // multiple={true}
               //defaultValue={this.state.clientes[0]}
-            >
-            {this.state.clientes.map((elemento) => (
-              <option key={elemento.cedula} value={elemento.cedula}>
-                {elemento.nombre}
+            > <option value="0">---</option>
+            {this.state.clientes.map((x) => (
+             
+              <option key={x.cedula} value={x.cedula}>
+                {x.nombre}
               </option>
             
             ))}
             </select>
           </div>
           <center>
-            <button className="btn btn-success">Calcular</button>
+            <button  type="button" onClick={this.nuevoPlan} className="btn btn-success">Calcular</button>
           </center>
           <br />
         </form>
@@ -186,12 +182,11 @@ export default class InsertarPlan extends Component {
             <h2>Informacion del Credito</h2>
             <div>
               <h5>Cuota a pagar </h5>
-              <p>{this.plan.valorcuota}</p>
+              <p>{plan.forma_pago}</p>
+              <p>{plan.valorcuota}</p>
             </div>
-            <button onClick={addPlan(plan)}>
-              {" "}
-              <Link to="/uploadDocument">Guardar Plan de Pago</Link>
-            </button>
+            
+            <Main idCliente={this.state.listSelected} plan={plan}/>
           </div>
         )}
       </div>

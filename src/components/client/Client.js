@@ -9,14 +9,20 @@ export default class Client extends Component {
   };
 
   cargarClientes = () => {
-    var url = Global.urlCliente;
-    var request = "/cliente";
-    axios.get(url + request).then((res) => {
-      this.setState({
-        clientes: res.data,
-        status: true,
+    axios
+      .get("http://localhost:3001/client/all")
+      .then((response) => {
+      console.log(response);
+       this.setState({...this.state,clientes:response.data,status:true}); 
+       // this.setState({clientes:[response], ...this.state})
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
       });
-    });
+      console.log(this.state);
+     
+      
   };
 
   componentDidMount = () => {
